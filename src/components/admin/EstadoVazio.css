@@ -1,0 +1,36 @@
+.estado-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 64px;
+  text-align: center;
+  background: var(--admin-superficie);
+  border: 1px solid var(--admin-borda);
+  border-radius: var(--admin-raio-cartao);
+}
+
+.estado-vazio__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 20px;
+  color: var(--admin-destaque);
+  background: var(--admin-fundo);
+  border: 1px solid var(--admin-borda);
+  border-radius: 50%;
+}
+
+.estado-vazio__titulo {
+  margin: 0 0 6px;
+  font-family: var(--admin-fonte-titulo);
+  font-size: 1.625rem;
+  font-weight: 500;
+}
+
+.estado-vazio__descricao {
+  margin: 0 0 20px;
+  color: var(--admin-texto-suave);
+  font-size: 0.8125rem;
+}

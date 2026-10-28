@@ -1,0 +1,44 @@
+.paginacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.paginacao__por-pagina .seletor__select {
+  height: 30px;
+  font-size: 0.75rem;
+}
+
+.paginacao__paginas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.paginacao__botao {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  color: var(--admin-texto);
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--admin-borda);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.paginacao__botao:hover:not(:disabled) {
+  border-color: var(--admin-borda-foco);
+}
+
+.paginacao__botao:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.paginacao__botao--ativo {
+  font-weight: 700;
+  background: var(--admin-primaria);
+  border-color: var(--admin-primaria);
+}

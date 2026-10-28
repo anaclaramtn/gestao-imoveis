@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import { listarImoveis } from "./services/imovelService";
+import "./Home.css";
+import { listarImoveis } from "../../services/imovelService";
+import { formatadorDeMoeda } from "../../utils/formatadores";
 
-const formatadorDeMoeda = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
-
-export default function App() {
+export default function Home() {
   const [imoveis, setImoveis] = useState([]);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(true);

@@ -1,0 +1,49 @@
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: var(--admin-raio);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.botao--primaria {
+  color: #ffffff;
+  background: var(--admin-primaria);
+  border: 1px solid var(--admin-primaria);
+}
+
+.botao--primaria:hover:not(:disabled) {
+  background: var(--admin-primaria-hover);
+}
+
+.botao--secundaria {
+  color: var(--admin-texto);
+  background: transparent;
+  border: 1px solid var(--admin-borda);
+}
+
+.botao--secundaria:hover:not(:disabled) {
+  border-color: var(--admin-borda-foco);
+}
+
+.botao--pequeno {
+  height: 30px;
+  padding: 0 14px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.botao--largura-total {
+  width: 100%;
+}
