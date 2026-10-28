@@ -1,0 +1,31 @@
+.seletor {
+  position: relative;
+  display: inline-flex;
+}
+
+.seletor__select {
+  width: 100%;
+  height: 40px;
+  padding: 0 36px 0 12px;
+  color: var(--admin-texto);
+  font-size: 0.8125rem;
+  background: var(--admin-campo);
+  border: 1px solid var(--admin-borda);
+  border-radius: var(--admin-raio);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.seletor__select:focus-visible {
+  border-color: var(--admin-borda-foco);
+}
+
+.seletor__seta {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  color: var(--admin-texto-suave);
+  transform: translateY(-50%);
+  pointer-events: none;
+}

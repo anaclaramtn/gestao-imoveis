@@ -1,0 +1,16 @@
+.alerta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  color: var(--admin-texto);
+  font-size: 0.8125rem;
+  background: var(--admin-erro-fundo);
+  border: 1px solid var(--admin-erro);
+  border-radius: var(--admin-raio);
+}
+
+.alerta svg {
+  flex-shrink: 0;
+  color: var(--admin-erro);
+}

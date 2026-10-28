@@ -1,0 +1,36 @@
+/*
+  Cores e medidas da área de administração (tema escuro).
+  Qualquer elemento dentro de .tema-admin pode usar essas variáveis.
+*/
+.tema-admin {
+  --admin-fundo: #070707;
+  --admin-superficie: #131113;
+  --admin-campo: #0e0c0e;
+  --admin-borda: #4a1d2a;
+  --admin-borda-foco: #b0213f;
+
+  --admin-texto: #f5f1f2;
+  --admin-texto-suave: #a39a9d;
+  --admin-destaque: #e3a27a;
+
+  --admin-primaria: #ad1a35;
+  --admin-primaria-hover: #c21f3d;
+
+  --admin-erro: #e5484d;
+  --admin-erro-fundo: #3a1419;
+
+  --admin-sucesso: #22c55e;
+  --admin-icone-acao: #e8175d;
+
+  --admin-fonte-titulo: "Cormorant Garamond", Georgia, serif;
+
+  --admin-raio: 6px;
+  --admin-raio-cartao: 12px;
+
+  /* Avisa o navegador que é um tema escuro (autopreenchimento, barras de rolagem, etc.) */
+  color-scheme: dark;
+
+  min-height: 100vh;
+  color: var(--admin-texto);
+  background: var(--admin-fundo);
+}
