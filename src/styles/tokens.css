@@ -1,0 +1,17 @@
+@theme {
+  --color-fundo: #080707;
+  --color-superficie: #121011;
+  --color-superficie-elevada: #1a1517;
+  --color-vinho: #5a343d;
+  --color-primaria: #a81936;
+  --color-rosa: #e63378;
+  --color-dourado: #d99a72;
+  --color-texto: #fff9f7;
+  --color-texto-suave: #b9aaa6;
+  --color-creme: #f5ece8;
+
+  --font-texto: "Inter", sans-serif;
+  --font-titulo: "Cormorant Garamond", serif;
+
+  --radius-cartao: 0.625rem;
+}

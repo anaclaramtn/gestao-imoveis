@@ -1,0 +1,98 @@
+.apresentacao {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 90rem;
+  grid-template-columns: minmax(18rem, 0.92fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: clamp(2rem, 5.5vw, 4.5rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 5vw, 2.5rem);
+  background: var(--color-fundo);
+}
+
+.apresentacao__retratos {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.apresentacao__retrato {
+  display: block;
+  width: 100%;
+  height: clamp(17rem, 36vw, 25rem);
+  border-radius: 0.5rem;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.apresentacao__retrato--katia { object-position: center 30%; }
+.apresentacao__retrato--renata { object-position: center 25%; }
+
+.apresentacao__conteudo { min-width: 0; }
+
+.apresentacao__sobretitulo,
+.servicos__sobretitulo {
+  display: table;
+  margin: 0 0 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgb(168 25 54 / 30%);
+  border-radius: 999px;
+  background: rgb(168 25 54 / 12%);
+  color: var(--color-rosa);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.apresentacao__titulo {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--color-texto);
+  font-family: var(--font-titulo), Georgia, serif;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.apresentacao__traco {
+  display: block;
+  width: 1.7rem;
+  height: 2px;
+  margin: 1.1rem 0;
+  background: var(--color-rosa);
+}
+
+.apresentacao__texto {
+  max-width: 34rem;
+  margin: 0;
+  color: #968b88;
+  font-size: 0.72rem;
+  line-height: 1.75;
+}
+
+.apresentacao__assinatura {
+  margin: 1.3rem 0 0;
+  color: var(--color-rosa);
+  font-family: var(--font-titulo), Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+@media (max-width: 767px) {
+  .apresentacao {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    align-content: center;
+    padding-block: 3rem;
+  }
+
+  .apresentacao__retratos { max-width: 24rem; }
+  .apresentacao__retrato { height: clamp(15rem, 66vw, 21rem); }
+  .apresentacao__titulo { font-size: clamp(2rem, 9vw, 2.75rem); }
+  .apresentacao__texto { font-size: 0.82rem; }
+}

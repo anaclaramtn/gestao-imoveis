@@ -1,59 +1,6 @@
-.pagina {
-  width: min(1120px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 48px 0;
-}
-
-.cabecalho {
-  margin-bottom: 32px;
-}
-
-.cabecalho h1 {
-  margin: 0 0 8px;
-  font-size: clamp(2rem, 5vw, 3rem);
-}
-
-.cabecalho p,
-.estado,
-.imovel__descricao {
-  color: #64748b;
-}
-
-.estado--erro {
-  padding: 16px;
-  color: #991b1b;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-}
-
-.imoveis {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.imovel {
-  padding: 24px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgb(15 23 42 / 6%);
-}
-
-.imovel h2 {
-  margin: 0 0 12px;
-  font-size: 1.25rem;
-}
-
-.imovel__descricao {
-  min-height: 3rem;
-  margin: 0 0 20px;
-}
-
-.imovel__preco {
-  margin: 0;
-  color: #166534;
-  font-size: 1.25rem;
-  font-weight: 700;
+.pagina-inicial {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--color-fundo);
+  color: var(--color-texto);
 }
