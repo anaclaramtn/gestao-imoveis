@@ -10,7 +10,9 @@ import Paginacao from "../../components/comuns/Paginacao";
 import Seletor from "../../components/comuns/Seletor";
 import { imoveisExemplo } from "../../dados/imoveisExemplo";
 import { normalizarTexto } from "../../utils/formatadores";
-import "./ListaImoveis.css";
+
+// Cabeçalho da tabela
+const ESTILO_TH = "px-4 py-3.5 text-left text-[10px] font-bold uppercase tracking-[0.04em] text-admin-destaque";
 
 const OPCOES_STATUS = [
   { valor: "todos", texto: "Todos os status" },
@@ -79,10 +81,12 @@ export default function ListaImoveis() {
 
   return (
     <>
-      <div className="lista-imoveis__topo">
+      <div className="mb-7 flex items-start justify-between gap-4 max-[720px]:flex-col max-[720px]:items-stretch">
         <div>
-          <h1 className="lista-imoveis__titulo">Gerenciamento de Imóveis</h1>
-          <p className="lista-imoveis__descricao">
+          <h1 className="mb-1.5 font-titulo text-[clamp(1.75rem,4vw,2.25rem)] leading-[1.1] font-medium">
+            Gerenciamento de Imóveis
+          </h1>
+          <p className="text-[13px] text-admin-texto-suave">
             Cadastre, edite e controle a visibilidade dos imóveis no catálogo público.
           </p>
         </div>
@@ -90,9 +94,9 @@ export default function ListaImoveis() {
         <Botao onClick={cadastrar}>Cadastrar imóvel</Botao>
       </div>
 
-      <div className="lista-imoveis__filtros">
+      <div className="mb-6 flex gap-3 max-[720px]:flex-col">
         <CampoTexto
-          className="lista-imoveis__busca"
+          className="flex-1"
           type="search"
           placeholder="Buscar por título ou código..."
           aria-label="Buscar por título ou código"
@@ -102,7 +106,7 @@ export default function ListaImoveis() {
         />
 
         <Seletor
-          className="lista-imoveis__status"
+          className="w-[165px] max-[720px]:w-full"
           aria-label="Filtrar por status"
           opcoes={OPCOES_STATUS}
           value={status}
@@ -111,19 +115,20 @@ export default function ListaImoveis() {
       </div>
 
       {visiveis.length > 0 ? (
-        <div className="lista-imoveis__tabela-caixa">
-          <table className="lista-imoveis__tabela">
-            <thead>
+        <div className="overflow-hidden rounded-admin-cartao border border-admin-borda bg-admin-superficie">
+          {/* No celular a tabela vira lista de cartões (o visual de cada um está em LinhaImovel) */}
+          <table className="w-full border-collapse max-[720px]:block">
+            <thead className="max-[720px]:hidden">
               <tr>
-                <th>Foto</th>
-                <th>Imóvel</th>
-                <th>Código</th>
-                <th>Preço</th>
-                <th>Status</th>
-                <th className="lista-imoveis__col-acoes">Ações</th>
+                <th className={ESTILO_TH}>Foto</th>
+                <th className={ESTILO_TH}>Imóvel</th>
+                <th className={ESTILO_TH}>Código</th>
+                <th className={ESTILO_TH}>Preço</th>
+                <th className={ESTILO_TH}>Status</th>
+                <th className={`${ESTILO_TH} text-right`}>Ações</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="max-[720px]:block">
               {visiveis.map((imovel) => (
                 <LinhaImovel
                   key={imovel.id}
@@ -149,8 +154,8 @@ export default function ListaImoveis() {
         />
       )}
 
-      <div className="lista-imoveis__rodape">
-        <p className="lista-imoveis__contagem">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 max-[720px]:flex-col-reverse">
+        <p className="text-xs text-admin-texto-suave">
           {filtrados.length > 0
             ? `Exibindo ${inicio + 1}-${inicio + visiveis.length} de ${filtrados.length} imóveis`
             : "Nenhum imóvel para exibir"}

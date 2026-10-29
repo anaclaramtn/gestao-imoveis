@@ -11,10 +11,10 @@ export default function FormularioImovel() {
 
   return (
     <>
-      <h1 style={{ fontFamily: "var(--admin-fonte-titulo)", fontWeight: 500 }}>
+      <h1 className="my-5 font-titulo text-[32px] font-medium">
         {editando ? `Editar imóvel (id: ${id})` : "Cadastrar imóvel"}
       </h1>
-      <p style={{ color: "var(--admin-texto-suave)" }}>Tela provisória.</p>
+      <p className="mb-4 text-admin-texto-suave">Tela provisória.</p>
 
       <Botao variante="secundaria" onClick={() => navigate("/admin/painel")}>
         Voltar para a lista
