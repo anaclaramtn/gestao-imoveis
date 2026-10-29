@@ -110,7 +110,7 @@ export default function ListaImoveis() {
           aria-label="Filtrar por status"
           opcoes={OPCOES_STATUS}
           value={status}
-          onChange={(e) => mudarStatus(e.target.value)}
+          onChange={mudarStatus}
         />
       </div>
 

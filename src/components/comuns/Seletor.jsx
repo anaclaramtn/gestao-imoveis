@@ -1,28 +1,160 @@
-const ESTILO_TAMANHO = {
-  normal: "h-10 text-[13px]",
-  pequeno: "h-[30px] text-xs",
+import { useEffect, useId, useRef, useState } from "react";
+
+const ALTURA = {
+  normal: "h-10",
+  pequeno: "h-[30px]",
 };
 
-// Caixa de seleção (dropdown) com o visual do admin.
-// opcoes: [{ valor: "todos", texto: "Todos os status" }, ...]
-// tamanho: "normal" ou "pequeno"
-export default function Seletor({ opcoes, tamanho = "normal", className = "", ...propsDoSelect }) {
-  return (
-    <div className={`relative inline-flex ${className}`}>
-      <select
-        className={`w-full cursor-pointer appearance-none rounded-admin border border-admin-borda bg-admin-campo pr-9 pl-3 text-admin-texto outline-none focus-visible:border-admin-borda-foco ${ESTILO_TAMANHO[tamanho]}`}
-        {...propsDoSelect}
-      >
-        {opcoes.map((opcao) => (
-          <option key={opcao.valor} value={opcao.valor}>
-            {opcao.texto}
-          </option>
-        ))}
-      </select>
+const TAMANHO_TEXTO = {
+  normal: "text-[13px]",
+  pequeno: "text-xs",
+};
 
-      <svg className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-admin-texto-suave" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+const ESTILO_DIRECAO = {
+  baixo: "top-full mt-1",
+  cima: "bottom-full mb-1",
+};
+
+/*
+  Dropdown personalizado com o visual do admin.
+    opcoes:   [{ valor: "todos", texto: "Todos os status" }, ...]
+    value:    valor da opção escolhida
+    onChange: recebe o novo valor (ex.: onChange={setStatus})
+    tamanho:  "normal" ou "pequeno"
+    direcao:  "baixo" ou "cima" (para onde a lista abre)
+
+  Funciona com mouse e teclado: setas, Enter/Espaço para escolher, Esc para fechar.
+*/
+export default function Seletor({ opcoes, value, onChange, tamanho = "normal", direcao = "baixo", className = "", ...outrasProps }) {
+  const [aberto, setAberto] = useState(false);
+  const [destacado, setDestacado] = useState(0);
+  const raiz = useRef(null);
+  const idLista = useId();
+
+  const indiceSelecionado = Math.max(0, opcoes.findIndex((opcao) => opcao.valor === value));
+  const selecionada = opcoes[indiceSelecionado];
+
+  // Fecha ao clicar fora do dropdown
+  useEffect(() => {
+    if (!aberto) return;
+
+    function cliqueFora(evento) {
+      if (!raiz.current.contains(evento.target)) setAberto(false);
+    }
+
+    document.addEventListener("mousedown", cliqueFora);
+    return () => document.removeEventListener("mousedown", cliqueFora);
+  }, [aberto]);
+
+  function abrir() {
+    setDestacado(indiceSelecionado);
+    setAberto(true);
+  }
+
+  function escolher(opcao) {
+    onChange(opcao.valor);
+    setAberto(false);
+  }
+
+  function aoApertarTecla(evento) {
+    if (!aberto) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(evento.key)) {
+        evento.preventDefault();
+        abrir();
+      }
+      return;
+    }
+
+    switch (evento.key) {
+      case "ArrowDown":
+        evento.preventDefault();
+        setDestacado((i) => Math.min(i + 1, opcoes.length - 1));
+        break;
+      case "ArrowUp":
+        evento.preventDefault();
+        setDestacado((i) => Math.max(i - 1, 0));
+        break;
+      case "Home":
+        evento.preventDefault();
+        setDestacado(0);
+        break;
+      case "End":
+        evento.preventDefault();
+        setDestacado(opcoes.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        evento.preventDefault();
+        escolher(opcoes[destacado]);
+        break;
+      case "Escape":
+        evento.preventDefault();
+        setAberto(false);
+        break;
+      case "Tab":
+        setAberto(false);
+        break;
+    }
+  }
+
+  return (
+    <div ref={raiz} className={`relative inline-flex ${className}`}>
+      <button
+        type="button"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={aberto}
+        aria-controls={idLista}
+        aria-activedescendant={aberto ? `${idLista}-${destacado}` : undefined}
+        className={`flex w-full cursor-pointer items-center justify-between gap-3 rounded-admin border bg-admin-campo pr-3 pl-3 text-left whitespace-nowrap text-admin-texto outline-none ${
+          aberto ? "border-admin-borda-foco" : "border-admin-borda focus-visible:border-admin-borda-foco"
+        } ${ALTURA[tamanho]} ${TAMANHO_TEXTO[tamanho]}`}
+        onClick={() => (aberto ? setAberto(false) : abrir())}
+        onKeyDown={aoApertarTecla}
+        {...outrasProps}
+      >
+        <span>{selecionada?.texto}</span>
+        <svg
+          className={`shrink-0 text-admin-texto-suave transition-transform ${aberto ? "rotate-180" : ""}`}
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {aberto && (
+        <ul
+          id={idLista}
+          role="listbox"
+          className={`absolute left-0 z-20 max-h-60 min-w-full overflow-auto rounded-admin border border-admin-borda bg-admin-superficie py-1 shadow-[0_12px_32px_rgb(0_0_0/60%)] ${ESTILO_DIRECAO[direcao]}`}
+        >
+          {opcoes.map((opcao, indice) => {
+            const ehSelecionada = indice === indiceSelecionado;
+
+            return (
+              <li
+                key={opcao.valor}
+                id={`${idLista}-${indice}`}
+                role="option"
+                aria-selected={ehSelecionada}
+                className={`flex cursor-pointer items-center justify-between gap-3 px-3 py-2 whitespace-nowrap ${TAMANHO_TEXTO[tamanho]} ${
+                  indice === destacado ? "bg-white/5" : "bg-transparent"
+                } ${ehSelecionada ? "font-semibold text-admin-destaque" : "text-admin-texto"}`}
+                onMouseEnter={() => setDestacado(indice)}
+                onMouseDown={(evento) => evento.preventDefault()}
+                onClick={() => escolher(opcao)}
+              >
+                {opcao.texto}
+                {ehSelecionada && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }
