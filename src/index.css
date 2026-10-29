@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/tokens.css";
+@import "./styles/tema-admin.css";
 
 @theme {
   --font-serif: "Cormorant Garamond", serif;
@@ -31,9 +32,15 @@ body {
   margin: 0;
 }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
+/*
+  Dentro de @layer base para que as classes do Tailwind (text-sm, font-bold...)
+  consigam sobrescrever. Fora de uma camada, essa regra venceria qualquer classe.
+*/
+@layer base {
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 }

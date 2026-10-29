@@ -1,6 +1,5 @@
 import { useState } from "react";
 import CampoTexto from "./CampoTexto";
-import "./CampoSenha.css";
 
 // Campo de senha com botão de olho para mostrar/ocultar o que foi digitado.
 export default function CampoSenha(props) {
@@ -9,7 +8,7 @@ export default function CampoSenha(props) {
   const botaoOlho = (
     <button
       type="button"
-      className="campo-senha__olho"
+      className="flex h-10 w-10 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-admin-texto-suave hover:text-admin-texto focus-visible:text-admin-texto max-[480px]:h-11"
       onClick={() => setVisivel(!visivel)}
       aria-label={visivel ? "Ocultar senha" : "Mostrar senha"}
     >

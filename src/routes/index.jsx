@@ -5,6 +5,7 @@ import Home from "../pages/publico/Home";
 import FormularioImovel from "../pages/admin/FormularioImovel";
 import ListaImoveis from "../pages/admin/ListaImoveis";
 import LoginAdmin from "../pages/admin/LoginAdmin";
+import PaginaNaoEncontrada from "../pages/admin/PaginaNaoEncontrada";
 
 // Mapa de todas as URLs do site e a página que cada uma exibe.
 export const router = createBrowserRouter([
@@ -30,6 +31,9 @@ export const router = createBrowserRouter([
           { path: "imoveis/:id/editar", element: <FormularioImovel /> }, // /admin/imoveis/3/editar
         ],
       },
+
+      // Qualquer outro endereço dentro de /admin: "*" significa "o que não combinou acima"
+      { path: "*", element: <PaginaNaoEncontrada /> }, // /admin/qualquercoisa
     ],
   },
 ]);
