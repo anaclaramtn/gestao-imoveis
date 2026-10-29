@@ -1,0 +1,103 @@
+.credenciais {
+  border-top: 1px solid rgb(90 52 61 / 27%);
+  border-bottom: 1px solid rgb(90 52 61 / 27%);
+  background: #0d0b0c;
+  padding: 1.75rem clamp(1.25rem, 5vw, 4.5rem);
+}
+
+.credenciais__lista {
+  display: grid;
+  max-width: 81rem;
+  grid-template-columns: 1fr 1fr 0.8fr 1.2fr;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.credenciais__item {
+  min-width: 0;
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+}
+
+.credenciais__item:first-child {
+  padding-left: 0;
+}
+
+.credenciais__item + .credenciais__item {
+  border-left: 1px solid rgb(90 52 61 / 33%);
+}
+
+.credenciais__valor,
+.credenciais__descricao {
+  margin: 0;
+}
+
+.credenciais__valor {
+  color: var(--color-dourado);
+  font-family: var(--font-titulo), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.credenciais__descricao {
+  margin-top: 0.25rem;
+  color: var(--color-texto-discreto, #7a6a66);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 767px) {
+  .credenciais {
+    border-top: 1px solid rgb(90 52 61 / 27%);
+    border-bottom: 1px solid rgb(90 52 61 / 27%);
+    background: #0d0b0c;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .credenciais__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1rem;
+  }
+
+  .credenciais__item {
+    padding-inline: 1rem;
+  }
+
+  .credenciais__item:first-child,
+  .credenciais__item:nth-child(odd) {
+    padding-left: 0;
+  }
+
+  .credenciais__item:nth-child(even) {
+    border-left: 1px solid rgb(90 52 61 / 33%);
+  }
+
+  .credenciais__item:nth-child(n + 3) {
+    padding-top: 1rem;
+    border-top: 1px solid rgb(90 52 61 / 33%);
+  }
+
+  .credenciais__valor {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .credenciais__descricao {
+    margin-top: 0.25rem;
+    color: var(--color-texto-discreto, #7a6a66);
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .credenciais__item {
+    padding-inline: 1.25rem;
+  }
+
+  .credenciais__valor {
+    font-size: 1.25rem;
+  }
+}
