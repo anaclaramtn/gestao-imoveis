@@ -3,6 +3,7 @@
   isolation: isolate;
   display: flex;
   min-height: clamp(36rem, 56.1vw, 50.5rem);
+  scroll-margin-top: 5.5rem;
   overflow: hidden;
   background: var(--color-fundo);
 }

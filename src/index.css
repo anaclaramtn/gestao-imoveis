@@ -20,6 +20,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;

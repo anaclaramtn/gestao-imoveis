@@ -6,7 +6,7 @@ const whatsapp = "https://wa.me/5585987823726";
 
 export default function Hero() {
   return (
-    <section className="hero" aria-labelledby="hero-titulo">
+    <section className="hero" id="hero" aria-labelledby="hero-titulo">
       <img className="hero__imagem" src={imagemDesktop} alt="" aria-hidden="true" />
 
       <div className="hero__conteudo">

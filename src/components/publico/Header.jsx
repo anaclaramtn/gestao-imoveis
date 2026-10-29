@@ -10,8 +10,8 @@ export default function Header() {
   }
 
   return (
-    <header className="relative z-10 border-b border-white/10 bg-[#080707] text-white">
-      <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080707]/95 text-white backdrop-blur-sm">
+      <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-2 sm:gap-4" onClick={fecharMenu}>
           <img src={logo} alt="Kátia & Renata" className="h-14 w-20 shrink-0 object-contain sm:h-21 sm:w-30" />
           <div className="min-w-0">
@@ -28,7 +28,7 @@ export default function Header() {
           id="menu-principal"
           className={`${menuAberto ? "flex" : "hidden"} absolute left-0 top-full w-full flex-col gap-5 border-b border-white/10 bg-[#080707] px-5 py-5 text-sm text-white/75 lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-8 lg:border-0 lg:bg-transparent lg:p-0`}
         >
-          <Link to="/" className="hover:text-white" onClick={fecharMenu}>Início</Link>
+          <a href="#hero" className="hover:text-white" onClick={fecharMenu}>Início</a>
           <Link to="/imoveis" className="hover:text-white" onClick={fecharMenu}>Imóveis</Link>
           <a href="#servicos" className="hover:text-white" onClick={fecharMenu}>Serviços</a>
         </nav>
