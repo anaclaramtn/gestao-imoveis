@@ -4,6 +4,7 @@ const ESTILO_BASE =
 const ESTILO_VARIANTE = {
   primaria: "border-admin-primaria bg-admin-primaria text-white enabled:hover:bg-admin-primaria-hover",
   secundaria: "border-admin-borda bg-transparent text-admin-texto enabled:hover:border-admin-borda-foco",
+  neutra: "border-admin-destaque/45 bg-transparent text-admin-texto enabled:hover:border-admin-destaque",
 };
 
 const ESTILO_TAMANHO = {
@@ -11,7 +12,8 @@ const ESTILO_TAMANHO = {
   pequeno: "h-[30px] px-3.5 text-xs font-medium",
 };
 
-// variante: "primaria" (vermelho cheio) ou "secundaria" (contorno, ex.: "Sair")
+// variante: "primaria" (vermelho cheio), "secundaria" (contorno vinho, ex.: "Sair")
+//           ou "neutra" (contorno dourado claro, ex.: "Cancelar")
 // tamanho: "normal" ou "pequeno"
 export default function Botao({ variante = "primaria", tamanho = "normal", larguraTotal, className = "", ...propsDoBotao }) {
   const classes = [

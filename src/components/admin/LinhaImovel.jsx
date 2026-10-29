@@ -1,4 +1,6 @@
+import { nomePorId, tiposImovel } from "../../dados/tabelasAuxiliares";
 import { formatadorDeMoeda } from "../../utils/formatadores";
+import { ehAluguel, ehPublicado } from "../../utils/imovel";
 import EtiquetaStatus from "./EtiquetaStatus";
 
 /*
@@ -22,13 +24,17 @@ const ESTILO_ACAO =
 // Uma linha da tabela de imóveis. Recebe o objeto do imóvel (hoje dos dados
 // de exemplo, depois do Firestore) e avisa a página quando editar/excluir é clicado.
 export default function LinhaImovel({ imovel, onEditar, onExcluir }) {
-  const preco = formatadorDeMoeda.format(imovel.preco);
+  // Rascunhos podem não ter preço nem tipo ainda
+  const preco = imovel.preco == null ? "—" : formatadorDeMoeda.format(imovel.preco);
+  const local = `${imovel.endereco.bairro}, ${imovel.endereco.cidade}`;
+  const tipo = nomePorId(tiposImovel, imovel.id_tipo_imovel);
+  const capa = imovel.fotos[0];
 
   return (
     <tr className={ESTILO_LINHA}>
       <td className={`${ESTILO_CELULA} max-[720px]:row-span-3 max-[720px]:self-start`}>
-        {imovel.foto ? (
-          <img src={imovel.foto} alt="" className={`${ESTILO_FOTO} block object-cover`} />
+        {capa ? (
+          <img src={capa.url} alt="" className={`${ESTILO_FOTO} block object-cover`} />
         ) : (
           <div className={`${ESTILO_FOTO} flex items-center justify-center bg-admin-sem-foto text-[10px] text-admin-texto-suave`}>
             Foto
@@ -37,32 +43,32 @@ export default function LinhaImovel({ imovel, onEditar, onExcluir }) {
       </td>
 
       <td className={`${ESTILO_CELULA} max-[720px]:col-span-2`}>
-        <strong className="mb-1 block text-sm font-semibold">{imovel.titulo}</strong>
-        <span className="text-xs text-admin-texto-suave">{imovel.tipo} · {imovel.localizacao}</span>
+        <strong className="mb-1 block text-sm font-semibold">{imovel.nome}</strong>
+        <span className="text-xs text-admin-texto-suave">{tipo ? `${tipo} · ${local}` : local}</span>
       </td>
 
       <td className={`${ESTILO_CELULA} whitespace-nowrap max-[720px]:col-start-2 max-[720px]:row-start-2 max-[720px]:text-xs max-[720px]:text-admin-texto-suave`}>
-        {imovel.codigo}
+        {imovel.id}
       </td>
 
       <td className={`${ESTILO_CELULA} whitespace-nowrap font-semibold text-admin-destaque max-[720px]:col-start-2 max-[720px]:row-start-3`}>
         {preco}
-        {imovel.finalidade === "aluguel" && "/mês"}
+        {imovel.preco != null && ehAluguel(imovel.id_tipo_negociacao) && "/mês"}
       </td>
 
       <td className={`${ESTILO_CELULA} max-[720px]:col-start-3 max-[720px]:row-start-2 max-[720px]:text-right`}>
-        <EtiquetaStatus publicado={imovel.publicado} />
+        <EtiquetaStatus publicado={ehPublicado(imovel.id_status)} />
       </td>
 
       <td className={`${ESTILO_CELULA} whitespace-nowrap text-right max-[720px]:col-start-3 max-[720px]:row-start-3`}>
-        <button type="button" className={ESTILO_ACAO} onClick={() => onEditar(imovel)} aria-label={`Editar ${imovel.titulo}`}>
+        <button type="button" className={ESTILO_ACAO} onClick={() => onEditar(imovel)} aria-label={`Editar ${imovel.nome}`}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
             <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z" />
           </svg>
         </button>
 
-        <button type="button" className={ESTILO_ACAO} onClick={() => onExcluir(imovel)} aria-label={`Excluir ${imovel.titulo}`}>
+        <button type="button" className={ESTILO_ACAO} onClick={() => onExcluir(imovel)} aria-label={`Excluir ${imovel.nome}`}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <polyline points="3 6 5 6 21 6" />
             <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />

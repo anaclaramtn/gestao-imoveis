@@ -1,24 +1,23 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import AvisoSucesso from "../../components/admin/AvisoSucesso";
+import ConfirmarExclusao from "../../components/admin/ConfirmarExclusao";
 import EstadoVazio from "../../components/admin/EstadoVazio";
 import LinhaImovel from "../../components/admin/LinhaImovel";
 import Botao from "../../components/comuns/Botao";
 import CampoTexto from "../../components/comuns/CampoTexto";
-import Modal from "../../components/comuns/Modal";
 import Paginacao from "../../components/comuns/Paginacao";
 import Seletor from "../../components/comuns/Seletor";
-import { imoveisExemplo } from "../../dados/imoveisExemplo";
+import * as imoveisLocal from "../../services/imoveisLocal";
 import { normalizarTexto } from "../../utils/formatadores";
+import { OPCOES_STATUS } from "../../utils/imovel";
 
 // Cabeçalho da tabela
 const ESTILO_TH = "px-4 py-3.5 text-left text-[10px] font-bold uppercase tracking-[0.04em] text-admin-destaque";
 
-const OPCOES_STATUS = [
-  { valor: "todos", texto: "Todos os status" },
-  { valor: "publicado", texto: "Publicado" },
-  { valor: "rascunho", texto: "Rascunho" },
-];
+// "Todos" + as opções da tabela de status (Publicado, Rascunho)
+const OPCOES_FILTRO_STATUS = [{ valor: "todos", texto: "Todos os status" }, ...OPCOES_STATUS];
 
 const iconeLupa = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -29,9 +28,19 @@ const iconeLupa = (
 
 export default function ListaImoveis() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Depois, essa lista virá do Firestore (ex.: listarTodosImoveis()).
-  const [imoveis] = useState(imoveisExemplo);
+  // Mensagem enviada pela tela de cadastro/edição depois de salvar
+  const [mensagemSucesso, setMensagemSucesso] = useState(location.state?.mensagemSucesso ?? null);
+  const fecharMensagem = useCallback(() => setMensagemSucesso(null), []);
+
+  // Apaga a mensagem do histórico, para ela não reaparecer ao recarregar a página
+  useEffect(() => {
+    if (location.state?.mensagemSucesso) navigate(location.pathname, { replace: true, state: null });
+  }, [location, navigate]);
+
+  // Por enquanto vem do "banco" em memória. Depois, virá do Firestore.
+  const [imoveis, setImoveis] = useState(imoveisLocal.listar);
 
   const [busca, setBusca] = useState("");
   const [status, setStatus] = useState("todos");
@@ -43,13 +52,10 @@ export default function ListaImoveis() {
   const termo = normalizarTexto(busca.trim());
   const filtrados = imoveis.filter((imovel) => {
     const combinaBusca =
-      normalizarTexto(imovel.titulo).includes(termo) ||
-      normalizarTexto(imovel.codigo).includes(termo);
+      normalizarTexto(imovel.nome).includes(termo) ||
+      normalizarTexto(imovel.id).includes(termo);
 
-    const combinaStatus =
-      status === "todos" ||
-      (status === "publicado" && imovel.publicado) ||
-      (status === "rascunho" && !imovel.publicado);
+    const combinaStatus = status === "todos" || imovel.id_status === status;
 
     return combinaBusca && combinaStatus;
   });
@@ -79,8 +85,23 @@ export default function ListaImoveis() {
   const cadastrar = () => navigate("/admin/imoveis/novo");
   const editar = (imovel) => navigate(`/admin/imoveis/${imovel.id}/editar`);
 
+  // Por enquanto exclui do "banco" em memória (volta ao recarregar a página).
+  function excluir(imovelExcluido) {
+    imoveisLocal.excluir(imovelExcluido.id);
+    setImoveis(imoveisLocal.listar());
+    setImovelParaExcluir(null);
+    setMensagemSucesso(`Imóvel "${imovelExcluido.nome}" (${imovelExcluido.id}) excluído com sucesso.`);
+  }
+
   return (
     <>
+      {/* key: reinicia o tempo da faixa quando chega uma mensagem nova */}
+      {mensagemSucesso && (
+        <AvisoSucesso key={mensagemSucesso} onFechar={fecharMensagem}>
+          {mensagemSucesso}
+        </AvisoSucesso>
+      )}
+
       <div className="mb-7 flex items-start justify-between gap-4 max-[720px]:flex-col max-[720px]:items-stretch">
         <div>
           <h1 className="mb-1.5 font-titulo text-[clamp(1.75rem,4vw,2.25rem)] leading-[1.1] font-medium">
@@ -98,8 +119,8 @@ export default function ListaImoveis() {
         <CampoTexto
           className="flex-1"
           type="search"
-          placeholder="Buscar por título ou código..."
-          aria-label="Buscar por título ou código"
+          placeholder="Buscar por nome ou código..."
+          aria-label="Buscar por nome ou código"
           icone={iconeLupa}
           value={busca}
           onChange={(e) => mudarBusca(e.target.value)}
@@ -108,7 +129,7 @@ export default function ListaImoveis() {
         <Seletor
           className="w-[165px] max-[720px]:w-full"
           aria-label="Filtrar por status"
-          opcoes={OPCOES_STATUS}
+          opcoes={OPCOES_FILTRO_STATUS}
           value={status}
           onChange={mudarStatus}
         />
@@ -171,18 +192,11 @@ export default function ListaImoveis() {
       </div>
 
       {imovelParaExcluir && (
-        <Modal
-          titulo="Excluir imóvel"
-          onFechar={() => setImovelParaExcluir(null)}
-          acoes={
-            <Botao variante="secundaria" onClick={() => setImovelParaExcluir(null)}>
-              Fechar
-            </Botao>
-          }
-        >
-          Janela provisória para <strong>{imovelParaExcluir.titulo}</strong>. A confirmação
-          de exclusão será construída depois.
-        </Modal>
+        <ConfirmarExclusao
+          imovel={imovelParaExcluir}
+          onCancelar={() => setImovelParaExcluir(null)}
+          onConfirmar={excluir}
+        />
       )}
     </>
   );
