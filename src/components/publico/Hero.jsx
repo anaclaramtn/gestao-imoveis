@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import imagemDesktop from "../../assets/hero-home-desktop.png";
 
 const whatsapp = "https://wa.me/5585987823726";
@@ -41,12 +40,12 @@ export default function Hero() {
             para transformar decisões imobiliárias em conquistas seguras.
           </p>
           <div className="flex flex-wrap items-center gap-3 max-[767px]:w-full max-[767px]:flex-col max-[767px]:items-stretch">
-            <Link
+            <a
               className="inline-flex min-h-[2.875rem] items-center justify-center rounded-md border border-transparent bg-[var(--color-primaria)] px-7 py-3.5 text-center text-[0.8125rem] leading-[1.2] font-semibold text-[var(--color-texto)] no-underline transition-[background-color,border-color,transform] duration-[160ms] hover:-translate-y-px hover:bg-[#c21f3d] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[var(--color-dourado)] max-[767px]:w-full max-[767px]:px-6 md:max-lg:px-[clamp(1rem,2.5vw,1.75rem)]"
-              to="/imoveis"
+              href="/imoveis"
             >
               Explorar todos os imóveis
-            </Link>
+            </a>
             <a
               className="inline-flex min-h-[2.875rem] items-center justify-center rounded-md border border-[rgb(217_154_114_/_60%)] bg-[rgb(255_255_255_/_5%)] px-7 py-3.5 text-center text-[0.8125rem] leading-[1.2] font-semibold text-[var(--color-texto)] no-underline transition-[background-color,border-color,transform] duration-[160ms] hover:-translate-y-px hover:bg-[rgb(255_255_255_/_11%)] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[var(--color-dourado)] max-[767px]:w-full max-[767px]:px-6 md:max-lg:px-[clamp(1rem,2.5vw,1.75rem)]"
               href={whatsapp}

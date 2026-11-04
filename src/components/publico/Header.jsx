@@ -28,9 +28,9 @@ export default function Header() {
           id="menu-principal"
           className={`${menuAberto ? "flex" : "hidden"} absolute left-0 top-full w-full flex-col gap-5 border-b border-white/10 bg-[#080707] px-5 py-5 text-sm text-white/75 lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-8 lg:border-0 lg:bg-transparent lg:p-0`}
         >
-          <a href="#hero" className="hover:text-white" onClick={fecharMenu}>Início</a>
-          <Link to="/imoveis" className="hover:text-white" onClick={fecharMenu}>Imóveis</Link>
-          <a href="#servicos" className="hover:text-white" onClick={fecharMenu}>Serviços</a>
+          <a href="/#hero" className="hover:text-white" onClick={fecharMenu}>Início</a>
+          <a href="/#imoveis" className="hover:text-white" onClick={fecharMenu}>Imóveis</a>
+          <a href="/#servicos" className="hover:text-white" onClick={fecharMenu}>Serviços</a>
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">

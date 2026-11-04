@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import LayoutAdmin from "../components/admin/LayoutAdmin";
 import Home from "../pages/publico/Home";
+import CatalogoImoveis from "../pages/publico/CatalogoImoveis";
+import DetalhesImovel from "../pages/publico/DetalhesImovel";
 import FormularioImovel from "../pages/admin/FormularioImovel";
 import ListaImoveis from "../pages/admin/ListaImoveis";
 import LoginAdmin from "../pages/admin/LoginAdmin";
@@ -13,6 +15,14 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/imoveis/:id",
+    element: <DetalhesImovel />,
+  },
+  {
+    path: "/imoveis",
+    element: <CatalogoImoveis />,
   },
 
   // Área de administração: todas as rotas começam com /admin

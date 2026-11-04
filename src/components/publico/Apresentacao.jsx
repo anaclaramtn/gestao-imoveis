@@ -5,6 +5,7 @@ export default function Apresentacao() {
   return (
     <section
       className="mx-auto grid min-h-[100vh] supports-[height:100svh]:min-h-[100svh] max-w-[90rem] grid-cols-[minmax(18rem,0.92fr)_minmax(0,1.08fr)] items-center gap-[clamp(2rem,5.5vw,4.5rem)] bg-[var(--color-fundo)] px-[clamp(1.25rem,5vw,2.5rem)] py-[clamp(3rem,7vh,5rem)] max-[767px]:grid-cols-[minmax(0,1fr)] max-[767px]:content-center max-[767px]:gap-7 max-[767px]:py-12"
+      id="apresentacao"
       aria-labelledby="apresentacao-titulo"
     >
       <div
