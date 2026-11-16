@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/LogoImobiliaria.png";
+import BotaoTema from "./BotaoTema";
+
+// Link do menu: o da página atual fica branco, em destaque e com um traço rosa embaixo
+function classeDoLink({ isActive }) {
+  const base = "border-b-2 py-2 font-medium transition-colors lg:py-1";
+  return isActive
+    ? `${base} border-[#e63378] text-white`
+    : `${base} border-transparent text-white/70 hover:text-white`;
+}
 
 export default function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -9,31 +18,38 @@ export default function Header() {
     setMenuAberto(false);
   }
 
+  // Leva para a landing page e vai ao topo (também quando já está nela)
+  function irParaInicio() {
+    fecharMenu();
+    window.scrollTo({ top: 0 });
+  }
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080707]/95 text-white backdrop-blur-sm">
+    <header data-tema="escuro" className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#080707]/95 text-white backdrop-blur-sm">
       <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-2 px-3 sm:px-6">
-        <Link to="/" className="flex min-w-0 items-center gap-2 sm:gap-4" onClick={fecharMenu}>
+        <Link to="/" className="flex min-w-0 items-center gap-2 sm:gap-4" onClick={irParaInicio}>
           <img src={logo} alt="Kátia & Renata" className="h-14 w-20 shrink-0 object-contain sm:h-21 sm:w-30" />
           <div className="min-w-0">
             <span className="block whitespace-nowrap font-serif text-xs font-semibold tracking-wide sm:text-xl">
               KÁTIA &amp; RENATA
             </span>
-            <p className="mt-0.5 whitespace-nowrap font-sans text-[7px] font-normal uppercase tracking-wide text-[#D99A72] sm:text-[10px]">
+            <p className="mt-0.5 whitespace-nowrap font-sans text-[9px] font-normal uppercase tracking-wide text-[#D99A72] sm:text-xs">
               Corretoras de Imóveis
             </p>
           </div>
         </Link>
 
+
+        <div className="flex shrink-0 items-center gap-2 lg:gap-8">
         <nav
           id="menu-principal"
-          className={`${menuAberto ? "flex" : "hidden"} absolute left-0 top-full w-full flex-col gap-5 border-b border-white/10 bg-[#080707] px-5 py-5 text-sm text-white/75 lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-8 lg:border-0 lg:bg-transparent lg:p-0`}
+          aria-label="Menu principal"
+          className={`${menuAberto ? "flex" : "hidden"} absolute left-0 top-full w-full flex-col gap-1 border-b border-white/10 bg-[#080707] px-5 py-4 text-sm lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-8 lg:border-0 lg:bg-transparent lg:p-0`}
         >
-          <a href="#hero" className="hover:text-white" onClick={fecharMenu}>Início</a>
-          <Link to="/imoveis" className="hover:text-white" onClick={fecharMenu}>Imóveis</Link>
-          <a href="#servicos" className="hover:text-white" onClick={fecharMenu}>Serviços</a>
+          <NavLink to="/" end className={classeDoLink} onClick={irParaInicio}>Início</NavLink>
+          <NavLink to="/imoveis" className={classeDoLink} onClick={fecharMenu}>Imóveis</NavLink>
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
           <a
             href="https://wa.me/5585987823726"
             aria-label="Falar no WhatsApp"
@@ -64,6 +80,8 @@ export default function Header() {
               </svg>
             )}
           </button>
+
+          <BotaoTema />
         </div>
       </div>
     </header>

@@ -1,17 +1,64 @@
+/*
+  Cores do site público. O tema escuro é o padrão (identidade da marca).
+  O modo claro troca os mesmos nomes de variável quando <html data-tema="claro">.
+  Áreas que devem ficar sempre escuras (cabeçalho, Hero, rodapé) usam data-tema="escuro".
+*/
 @theme {
   --color-fundo: #080707;
+  --color-secao: #0d0b0c; /* fundo das seções alternadas */
   --color-superficie: #121011;
   --color-superficie-elevada: #1a1517;
+  --color-cartao: rgb(26 21 23 / 55%);
+  --color-campo: rgb(26 21 23 / 70%);
+  --color-borda: rgb(90 52 61 / 40%);
   --color-vinho: #5a343d;
   --color-primaria: #a81936;
   --color-rosa: #e63378;
   --color-dourado: #d99a72;
   --color-texto: #fff9f7;
   --color-texto-suave: #b9aaa6;
+  --color-texto-mudo: #a89d9a;
   --color-creme: #f5ece8;
 
   --font-texto: "Inter", sans-serif;
   --font-titulo: "Cormorant Garamond", serif;
 
   --radius-cartao: 0.625rem;
+}
+
+[data-tema="claro"] {
+  color-scheme: light;
+  --color-fundo: #faf6f3;
+  --color-secao: #f2e9e4;
+  --color-superficie: #ffffff;
+  --color-superficie-elevada: #ffffff;
+  --color-cartao: #ffffff;
+  --color-campo: #ffffff;
+  --color-borda: rgb(90 52 61 / 22%);
+  --color-vinho: #e3cfc9;
+  --color-rosa: #c01c5a;
+  --color-dourado: #9a5a32;
+  --color-texto: #231b1d;
+  --color-texto-suave: #5a4d50;
+  --color-texto-mudo: #6b5d61;
+  --color-creme: #231b1d;
+}
+
+/* Trechos que ficam escuros mesmo no modo claro (repete os valores do tema escuro) */
+[data-tema="escuro"] {
+  color-scheme: dark;
+  --color-fundo: #080707;
+  --color-secao: #0d0b0c;
+  --color-superficie: #121011;
+  --color-superficie-elevada: #1a1517;
+  --color-cartao: rgb(26 21 23 / 55%);
+  --color-campo: rgb(26 21 23 / 70%);
+  --color-borda: rgb(90 52 61 / 40%);
+  --color-vinho: #5a343d;
+  --color-rosa: #e63378;
+  --color-dourado: #d99a72;
+  --color-texto: #fff9f7;
+  --color-texto-suave: #b9aaa6;
+  --color-texto-mudo: #a89d9a;
+  --color-creme: #f5ece8;
 }

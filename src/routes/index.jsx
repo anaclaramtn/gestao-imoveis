@@ -1,7 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import LayoutAdmin from "../components/admin/LayoutAdmin";
+import RotaProtegida from "../components/admin/RotaProtegida";
+import DetalheImovel from "../pages/publico/DetalheImovel";
 import Home from "../pages/publico/Home";
+import Imoveis from "../pages/publico/Imoveis";
 import FormularioImovel from "../pages/admin/FormularioImovel";
 import ListaImoveis from "../pages/admin/ListaImoveis";
 import LoginAdmin from "../pages/admin/LoginAdmin";
@@ -14,6 +17,8 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Home />,
   },
+  { path: "/imoveis", element: <Imoveis /> },
+  { path: "/imoveis/:id", element: <DetalheImovel /> },
 
   // Área de administração: todas as rotas começam com /admin
   {
@@ -24,7 +29,11 @@ export const router = createBrowserRouter([
 
       // Telas internas: todas aparecem dentro do LayoutAdmin (cabeçalho + conteúdo)
       {
-        element: <LayoutAdmin />,
+        element: (
+          <RotaProtegida>
+            <LayoutAdmin />
+          </RotaProtegida>
+        ),
         children: [
           { path: "painel", element: <ListaImoveis /> }, // /admin/painel
           { path: "imoveis/novo", element: <FormularioImovel /> }, // /admin/imoveis/novo
