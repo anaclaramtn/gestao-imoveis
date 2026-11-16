@@ -8,7 +8,7 @@ const ESTILO_VARIANTE = {
 };
 
 const ESTILO_TAMANHO = {
-  normal: "h-10 px-5 text-[13px] font-bold",
+  normal: "h-11 px-5 text-sm font-bold",
   pequeno: "h-[30px] px-3.5 text-xs font-medium",
 };
 

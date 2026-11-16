@@ -3,12 +3,12 @@ import { useEffect, useId, useRef, useState } from "react";
 import Rotulo from "./Rotulo";
 
 const ALTURA = {
-  normal: "h-10",
+  normal: "h-11",
   pequeno: "h-[30px]",
 };
 
 const TAMANHO_TEXTO = {
-  normal: "text-[13px]",
+  normal: "text-sm",
   pequeno: "text-xs",
 };
 

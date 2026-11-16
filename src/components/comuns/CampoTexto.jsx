@@ -41,7 +41,7 @@ export default function CampoTexto({ rotulo, obrigatorio, icone, acessorio, erro
         {multilinha ? (
           <textarea id={id} aria-invalid={erro || undefined} className={`${ESTILO_ENTRADA} min-h-[110px] resize-y py-2.5 leading-normal`} {...propsDoInput} />
         ) : (
-          <input id={id} aria-invalid={erro || undefined} className={`${ESTILO_ENTRADA} h-10 max-[480px]:h-11 ${ESTILO_AUTOPREENCHIMENTO}`} {...propsDoInput} />
+          <input id={id} aria-invalid={erro || undefined} className={`${ESTILO_ENTRADA} h-11 ${ESTILO_AUTOPREENCHIMENTO}`} {...propsDoInput} />
         )}
 
         {acessorio}

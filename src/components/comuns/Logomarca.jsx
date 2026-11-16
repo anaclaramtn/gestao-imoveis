@@ -1,11 +1,13 @@
-// Placeholder temporário até a logomarca oficial ser adicionada.
+import logo from "../../assets/LogoImobiliaria.png";
+
+// Logomarca da imobiliária (a mesma do site público), usada no login e no cabeçalho do admin.
 export default function Logomarca({ largura = 116, altura = 88 }) {
   return (
-    <div
-      className="flex shrink-0 items-center justify-center overflow-hidden bg-white text-center text-[10px] font-semibold text-[#111111]"
+    <img
+      src={logo}
+      alt="Kátia & Renata"
+      className="shrink-0 object-contain"
       style={{ width: largura, height: altura }}
-    >
-      (Logomarca)
-    </div>
+    />
   );
 }

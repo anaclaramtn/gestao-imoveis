@@ -13,7 +13,7 @@ export default function PaginaNaoEncontrada() {
           404
         </p>
         <h1 className="mt-2 mb-2 font-titulo text-[28px] font-medium">Página não encontrada</h1>
-        <p className="mb-7 text-[13px] text-admin-texto-suave">
+        <p className="mb-7 text-sm text-admin-texto-suave">
           O endereço que você tentou acessar não existe ou foi removido.
         </p>
 

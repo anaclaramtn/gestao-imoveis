@@ -24,7 +24,7 @@ export default function AvisoCamposFaltando({ paraPublicar, campos, onFechar }) 
           : "Para salvar como rascunho, preencha pelo menos o nome e o endereço. Ainda falta:"}
       </p>
 
-      <ul className="mt-3 max-h-48 list-disc overflow-auto pl-5 text-[13px] font-semibold text-admin-destaque">
+      <ul className="mt-3 max-h-48 list-disc overflow-auto pl-5 text-sm font-semibold text-admin-destaque">
         {campos.map((campo) => (
           <li key={campo}>{NOMES_DOS_CAMPOS[campo]}</li>
         ))}

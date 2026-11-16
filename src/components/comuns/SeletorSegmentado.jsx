@@ -49,7 +49,7 @@ export default function SeletorSegmentado({ opcoes, value, onChange, rotulo, obr
               role="radio"
               aria-checked={escolhida}
               tabIndex={escolhida ? 0 : -1}
-              className={`h-8 cursor-pointer rounded px-3 text-[13px] whitespace-nowrap transition-colors max-[480px]:h-9 ${
+              className={`h-8 cursor-pointer rounded px-3 text-sm whitespace-nowrap transition-colors max-[480px]:h-9 ${
                 escolhida
                   ? "bg-admin-primaria font-bold text-white"
                   : "bg-transparent text-admin-texto-suave hover:text-admin-texto"

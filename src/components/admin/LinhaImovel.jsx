@@ -14,7 +14,7 @@ const ESTILO_LINHA =
   "max-[720px]:grid max-[720px]:grid-cols-[76px_1fr_auto] max-[720px]:items-center max-[720px]:gap-x-3 max-[720px]:gap-y-1.5 max-[720px]:border-t max-[720px]:border-admin-borda max-[720px]:p-3.5 max-[720px]:first:border-t-0";
 
 const ESTILO_CELULA =
-  "border-t border-admin-borda px-4 py-3 align-middle text-[13px] max-[720px]:border-none max-[720px]:p-0";
+  "border-t border-admin-borda px-4 py-3 align-middle text-sm max-[720px]:border-none max-[720px]:p-0";
 
 const ESTILO_FOTO = "h-10 w-[60px] rounded max-[720px]:h-[76px] max-[720px]:w-[76px]";
 
@@ -36,7 +36,7 @@ export default function LinhaImovel({ imovel, onEditar, onExcluir }) {
         {capa ? (
           <img src={capa.url} alt="" className={`${ESTILO_FOTO} block object-cover`} />
         ) : (
-          <div className={`${ESTILO_FOTO} flex items-center justify-center bg-admin-sem-foto text-[10px] text-admin-texto-suave`}>
+          <div className={`${ESTILO_FOTO} flex items-center justify-center bg-admin-sem-foto text-xs text-admin-texto-suave`}>
             Foto
           </div>
         )}

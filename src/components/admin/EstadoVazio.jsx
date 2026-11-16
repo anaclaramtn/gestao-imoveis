@@ -9,7 +9,7 @@ export default function EstadoVazio({ titulo, descricao, children }) {
         </svg>
       </div>
       <h2 className="mb-1.5 font-titulo text-[26px] font-medium">{titulo}</h2>
-      <p className="mb-5 text-[13px] text-admin-texto-suave">{descricao}</p>
+      <p className="mb-5 text-sm text-admin-texto-suave">{descricao}</p>
       {children}
     </div>
   );

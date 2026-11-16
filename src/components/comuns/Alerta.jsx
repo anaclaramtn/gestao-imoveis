@@ -2,7 +2,7 @@
 export default function Alerta({ children }) {
   return (
     <div
-      className="flex items-center gap-2.5 rounded-admin border border-admin-erro bg-admin-erro-fundo px-3 py-2 text-[13px] text-admin-texto"
+      className="flex items-center gap-2.5 rounded-admin border border-admin-erro bg-admin-erro-fundo px-3 py-2 text-sm text-admin-texto"
       role="alert"
     >
       <svg className="shrink-0 text-admin-erro" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
