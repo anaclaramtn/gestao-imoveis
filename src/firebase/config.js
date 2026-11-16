@@ -17,7 +17,7 @@ const variaveisAusentes = Object.entries(variaveisObrigatorias)
   .map(([nome]) => nome);
 
 if (variaveisAusentes.length > 0) {
-  throw new Error("Sem o .env.local");
+  throw new Error("Sem o .env");
 }
 
 const firebaseConfig = {
