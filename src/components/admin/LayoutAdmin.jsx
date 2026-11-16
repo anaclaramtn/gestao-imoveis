@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 
 import Botao from "../comuns/Botao";
+import { sair } from "../../services/authService";
 import Logomarca from "../comuns/Logomarca";
 
 // Largura do conteúdo, igual no cabeçalho e na página
@@ -20,13 +21,16 @@ export default function LayoutAdmin() {
               <p className="font-titulo text-[22px] font-medium uppercase tracking-[0.02em] max-[480px]:text-lg">
                 Kátia &amp; Renata
               </p>
-              <p className="mt-0.5 text-[10px] uppercase tracking-[0.04em] text-admin-destaque">
+              <p className="mt-0.5 text-xs uppercase tracking-[0.04em] text-admin-destaque">
                 Painel de controle
               </p>
             </div>
           </div>
 
-          <Botao variante="secundaria" tamanho="pequeno" onClick={() => navigate("/admin")}>
+          <Botao variante="secundaria" tamanho="pequeno" onClick={async () => {
+              await sair();
+              navigate("/admin");
+            }}>
             Sair
           </Botao>
         </div>

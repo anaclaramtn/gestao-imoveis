@@ -43,6 +43,12 @@ export const OPCOES_ESTADO = [
   ["SE", "Sergipe"], ["TO", "Tocantins"],
 ].map(([sigla, nome]) => ({ valor: sigla, texto: nome }));
 
+// Por enquanto a imobiliária atende só o Ceará. Para liberar outros estados, inclua a sigla aqui.
+export const ESTADOS_ATENDIDOS = ["CE"];
+export const ESTADO_PADRAO = "CE";
+
+export const OPCOES_ESTADO_ATENDIDOS = OPCOES_ESTADO.filter(({ valor }) => ESTADOS_ATENDIDOS.includes(valor));
+
 // Aluguel e Alugada mostram o preço "por mês"
 export function ehAluguel(idTipoNegociacao) {
   return idTipoNegociacao === ID_TIPO_NEGOCIACAO.aluguel || idTipoNegociacao === ID_TIPO_NEGOCIACAO.alugada;
@@ -110,7 +116,7 @@ export function formularioVazio() {
     id_tipo_negociacao: ID_TIPO_NEGOCIACAO.aVenda,
     id_status: ID_STATUS.rascunho,
     preco: "", sobre_imovel: "",
-    cep: "", rua: "", numero: "", complemento: "", bairro: "", cidade: "", estado: "",
+    cep: "", rua: "", numero: "", complemento: "", bairro: "", cidade: "", estado: ESTADO_PADRAO,
     area_construida: "", terreno: "",
     numero_quartos: "", numero_suites: "", numero_banheiros: "", numero_vagas: "",
     comodidades: [], fotos: [],

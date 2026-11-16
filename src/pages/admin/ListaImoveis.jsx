@@ -9,12 +9,13 @@ import Botao from "../../components/comuns/Botao";
 import CampoTexto from "../../components/comuns/CampoTexto";
 import Paginacao from "../../components/comuns/Paginacao";
 import Seletor from "../../components/comuns/Seletor";
-import * as imoveisLocal from "../../services/imoveisLocal";
+import { imoveisExemplo } from "../../dados/imoveisExemplo";
+import { excluirImovel, listarImoveis, salvarImovel } from "../../services/imovelService";
 import { normalizarTexto } from "../../utils/formatadores";
 import { OPCOES_STATUS } from "../../utils/imovel";
 
 // Cabeçalho da tabela
-const ESTILO_TH = "px-4 py-3.5 text-left text-[10px] font-bold uppercase tracking-[0.04em] text-admin-destaque";
+const ESTILO_TH = "px-4 py-3.5 text-left text-xs font-bold uppercase tracking-[0.04em] text-admin-destaque";
 
 // "Todos" + as opções da tabela de status (Publicado, Rascunho)
 const OPCOES_FILTRO_STATUS = [{ valor: "todos", texto: "Todos os status" }, ...OPCOES_STATUS];
@@ -39,8 +40,22 @@ export default function ListaImoveis() {
     if (location.state?.mensagemSucesso) navigate(location.pathname, { replace: true, state: null });
   }, [location, navigate]);
 
-  // Por enquanto vem do "banco" em memória. Depois, virá do Firestore.
-  const [imoveis, setImoveis] = useState(imoveisLocal.listar);
+  // Vem do Firestore
+  const [imoveis, setImoveis] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erroDeCarga, setErroDeCarga] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+
+  useEffect(() => {
+    let ativo = true;
+    listarImoveis()
+      .then((lista) => ativo && setImoveis(lista))
+      .catch(() => ativo && setErroDeCarga(true))
+      .finally(() => ativo && setCarregando(false));
+    return () => {
+      ativo = false;
+    };
+  }, []);
 
   const [busca, setBusca] = useState("");
   const [status, setStatus] = useState("todos");
@@ -85,12 +100,39 @@ export default function ListaImoveis() {
   const cadastrar = () => navigate("/admin/imoveis/novo");
   const editar = (imovel) => navigate(`/admin/imoveis/${imovel.id}/editar`);
 
-  // Por enquanto exclui do "banco" em memória (volta ao recarregar a página).
-  function excluir(imovelExcluido) {
-    imoveisLocal.excluir(imovelExcluido.id);
-    setImoveis(imoveisLocal.listar());
-    setImovelParaExcluir(null);
-    setMensagemSucesso(`Imóvel "${imovelExcluido.nome}" (${imovelExcluido.id}) excluído com sucesso.`);
+  // TEMPORÁRIO (só em `npm run dev`): grava os imóveis de exemplo no Firestore. Remover depois de usar.
+  const [semeando, setSemeando] = useState(false);
+  async function carregarExemplos() {
+    if (!window.confirm(`Gravar ${imoveisExemplo.length} imóveis de exemplo no Firestore?`)) return;
+    setSemeando(true);
+    try {
+      for (const exemplo of imoveisExemplo) {
+        // Sem id: o serviço gera o próximo código (KR-xxx) de verdade
+        // eslint-disable-next-line no-unused-vars
+        const { id, ...dados } = exemplo;
+        await salvarImovel(dados);
+      }
+      setImoveis(await listarImoveis());
+      setMensagemSucesso(`${imoveisExemplo.length} imóveis de exemplo cadastrados.`);
+    } catch {
+      setErroDeCarga(true);
+    } finally {
+      setSemeando(false);
+    }
+  }
+
+  async function excluir(imovelExcluido) {
+    setExcluindo(true);
+    try {
+      await excluirImovel(imovelExcluido);
+      setImoveis((atuais) => atuais.filter((imovel) => imovel.id !== imovelExcluido.id));
+      setMensagemSucesso(`Imóvel "${imovelExcluido.nome}" (${imovelExcluido.id}) excluído com sucesso.`);
+    } catch {
+      setErroDeCarga(true);
+    } finally {
+      setExcluindo(false);
+      setImovelParaExcluir(null);
+    }
   }
 
   return (
@@ -107,12 +149,19 @@ export default function ListaImoveis() {
           <h1 className="mb-1.5 font-titulo text-[clamp(1.75rem,4vw,2.25rem)] leading-[1.1] font-medium">
             Gerenciamento de Imóveis
           </h1>
-          <p className="text-[13px] text-admin-texto-suave">
+          <p className="text-sm text-admin-texto-suave">
             Cadastre, edite e controle a visibilidade dos imóveis no catálogo público.
           </p>
         </div>
 
-        <Botao onClick={cadastrar}>Cadastrar imóvel</Botao>
+        <div className="flex gap-3">
+          {import.meta.env.DEV && (
+            <Botao variante="neutra" disabled={semeando} onClick={carregarExemplos}>
+              {semeando ? "Gravando exemplos..." : "Carregar exemplos"}
+            </Botao>
+          )}
+          <Botao onClick={cadastrar}>Cadastrar imóvel</Botao>
+        </div>
       </div>
 
       <div className="mb-6 flex gap-3 max-[720px]:flex-col">
@@ -135,7 +184,16 @@ export default function ListaImoveis() {
         />
       </div>
 
-      {visiveis.length > 0 ? (
+      {carregando ? (
+        <p className="py-16 text-center text-sm text-admin-texto-suave">Carregando imóveis...</p>
+      ) : erroDeCarga ? (
+        <EstadoVazio
+          titulo="Não foi possível concluir a operação"
+          descricao="Verifique sua conexão e as permissões do Firebase e tente novamente."
+        >
+          <Botao onClick={() => window.location.reload()}>Recarregar</Botao>
+        </EstadoVazio>
+      ) : visiveis.length > 0 ? (
         <div className="overflow-hidden rounded-admin-cartao border border-admin-borda bg-admin-superficie">
           {/* No celular a tabela vira lista de cartões (o visual de cada um está em LinhaImovel) */}
           <table className="w-full border-collapse max-[720px]:block">
@@ -195,7 +253,7 @@ export default function ListaImoveis() {
         <ConfirmarExclusao
           imovel={imovelParaExcluir}
           onCancelar={() => setImovelParaExcluir(null)}
-          onConfirmar={excluir}
+          onConfirmar={excluindo ? () => {} : excluir}
         />
       )}
     </>

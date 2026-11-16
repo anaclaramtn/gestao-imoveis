@@ -2,9 +2,22 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Imóveis: o público só lê os publicados (id_status == 1); o corretor logado lê e escreve tudo
     match /imoveis/{imovelId} {
-      allow read: if resource.data.publicado == true;
+      allow read: if resource.data.id_status == 1 || request.auth != null;
       allow write: if request.auth != null;
+
+      // Fotos do imóvel: seguem a visibilidade do imóvel
+      match /fotos/{fotoId} {
+        allow read: if request.auth != null
+          || get(/databases/$(database)/documents/imoveis/$(imovelId)).data.id_status == 1;
+        allow write: if request.auth != null;
+      }
+    }
+
+    // Contador usado para gerar os códigos KR-001, KR-002...
+    match /contadores/{contadorId} {
+      allow read, write: if request.auth != null;
     }
   }
 }

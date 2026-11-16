@@ -6,8 +6,8 @@ import { useRef } from "react";
     value:    array de fotos [{ id, url }]
     onChange: recebe o novo array
 
-  Por enquanto as fotos ficam só no navegador (URL temporária).
-  Depois, ao salvar, elas serão enviadas para o Cloud Storage.
+  Fotos novas ficam no navegador (URL temporária + `arquivo`) até o imóvel ser salvo;
+  aí o imovelService as comprime e grava no Firestore. Fotos já salvas têm { id, url }.
 */
 export default function SeletorFotos({ value, onChange, erro }) {
   const entrada = useRef(null);
@@ -52,13 +52,13 @@ export default function SeletorFotos({ value, onChange, erro }) {
             <img src={foto.url} alt={`Foto ${indice + 1} do imóvel`} className="h-full w-full object-cover" />
 
             {indice === 0 ? (
-              <span className="absolute top-2 left-2 rounded-full bg-admin-primaria px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+              <span className="absolute top-2 left-2 rounded-full bg-admin-primaria px-2 py-0.5 text-xs font-bold uppercase text-white">
                 ★ Capa
               </span>
             ) : (
               <button
                 type="button"
-                className="absolute bottom-2 left-2 cursor-pointer rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 max-[720px]:opacity-100"
+                className="absolute bottom-2 left-2 cursor-pointer rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 max-[720px]:opacity-100"
                 onClick={() => tornarCapa(foto)}
               >
                 Tornar capa

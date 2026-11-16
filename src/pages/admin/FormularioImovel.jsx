@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import AvisoCamposFaltando from "../../components/admin/AvisoCamposFaltando";
@@ -10,9 +10,9 @@ import Botao from "../../components/comuns/Botao";
 import CampoTexto from "../../components/comuns/CampoTexto";
 import Seletor from "../../components/comuns/Seletor";
 import SeletorSegmentado from "../../components/comuns/SeletorSegmentado";
-import * as imoveisLocal from "../../services/imoveisLocal";
+import { buscarImovelPorId, salvarImovel } from "../../services/imovelService";
 import {
-  OPCOES_ESTADO,
+  OPCOES_ESTADO_ATENDIDOS,
   OPCOES_NEGOCIACAO,
   OPCOES_STATUS,
   OPCOES_TIPO,
@@ -47,23 +47,53 @@ function formatarMilhar(digitos) {
     - Publicado: precisa de todos os campos (só o complemento é opcional).
 */
 export default function FormularioImovel() {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const imovelExistente = id ? imoveisLocal.buscarPorId(id) : null;
+  const navigate = useNavigate();
+  const [imovelExistente, setImovelExistente] = useState(null);
+  const [carregando, setCarregando] = useState(Boolean(id));
+  const [falhou, setFalhou] = useState(false);
+
+  // Na edição, busca o imóvel no Firestore antes de montar o formulário
+  useEffect(() => {
+    if (!id) return;
+    let ativo = true;
+    buscarImovelPorId(id)
+      .then((imovel) => ativo && setImovelExistente(imovel))
+      .catch(() => ativo && setFalhou(true))
+      .finally(() => ativo && setCarregando(false));
+    return () => {
+      ativo = false;
+    };
+  }, [id]);
+
+  if (carregando) {
+    return <p className="py-16 text-center text-sm text-admin-texto-suave">Carregando imóvel...</p>;
+  }
+
+  if (id && (falhou || !imovelExistente)) {
+    return (
+      <EstadoVazio
+        titulo={falhou ? "Não foi possível carregar o imóvel" : "Imóvel não encontrado"}
+        descricao={falhou ? "Verifique sua conexão e tente novamente." : `Não existe nenhum imóvel com o código ${id}.`}
+      >
+        <Botao onClick={() => navigate("/admin/painel")}>Voltar para a lista</Botao>
+      </EstadoVazio>
+    );
+  }
+
+  return <FormularioDoImovel id={id} imovelExistente={imovelExistente} />;
+}
+
+function FormularioDoImovel({ id, imovelExistente }) {
+  const navigate = useNavigate();
 
   const [formulario, setFormulario] = useState(() =>
     imovelExistente ? imovelParaFormulario(imovelExistente) : formularioVazio(),
   );
   const [camposComErro, setCamposComErro] = useState([]);
   const [camposDoAviso, setCamposDoAviso] = useState(null);
-
-  if (id && !imovelExistente) {
-    return (
-      <EstadoVazio titulo="Imóvel não encontrado" descricao={`Não existe nenhum imóvel com o código ${id}.`}>
-        <Botao onClick={() => navigate("/admin/painel")}>Voltar para a lista</Botao>
-      </EstadoVazio>
-    );
-  }
+  const [salvando, setSalvando] = useState(false);
+  const [erroAoSalvar, setErroAoSalvar] = useState("");
 
   function alterar(campo, valor) {
     setFormulario((atual) => ({ ...atual, [campo]: valor }));
@@ -87,7 +117,7 @@ export default function FormularioImovel() {
     return { ...ligarCampo(campo, { formatar: (texto) => soDigitos(texto, 5) }), inputMode: "numeric" };
   }
 
-  function salvar(evento) {
+  async function salvar(evento) {
     evento.preventDefault();
 
     const faltando = camposFaltando(formulario);
@@ -97,8 +127,16 @@ export default function FormularioImovel() {
       return;
     }
 
-    // Por enquanto salva no "banco" em memória. Depois, aqui entra o Firestore.
-    const salvo = imoveisLocal.salvar(formularioParaImovel(formulario, id));
+    setErroAoSalvar("");
+    setSalvando(true);
+    let salvo;
+    try {
+      salvo = await salvarImovel(formularioParaImovel(formulario, id));
+    } catch {
+      setErroAoSalvar("Não foi possível salvar o imóvel. Verifique sua conexão e tente novamente.");
+      setSalvando(false);
+      return;
+    }
 
     // Deu certo: volta para a lista, que mostra a mensagem de sucesso
     const mensagem = id
@@ -122,7 +160,7 @@ export default function FormularioImovel() {
             </span>
           )}
         </div>
-        <p className="mt-1.5 text-[13px] text-admin-texto-suave">
+        <p className="mt-1.5 text-sm text-admin-texto-suave">
           {id
             ? "Atualize as informações do imóvel."
             : "Preencha as informações do imóvel. O código (KR-…) é gerado automaticamente ao salvar."}
@@ -202,7 +240,7 @@ export default function FormularioImovel() {
             <Seletor
               rotulo="Estado"
               obrigatorio
-              opcoes={OPCOES_ESTADO}
+              opcoes={OPCOES_ESTADO_ATENDIDOS}
               value={formulario.estado}
               onChange={(estado) => alterar("estado", estado)}
               erro={camposComErro.includes("estado")}
@@ -247,13 +285,18 @@ export default function FormularioImovel() {
       </div>
 
       <div className="mt-8 flex items-center justify-between gap-4 border-t border-admin-borda pt-6 max-[720px]:flex-col max-[720px]:items-stretch">
-        <p className="text-xs text-admin-texto-suave">* Campos obrigatórios para publicar.</p>
+        <div>
+          <p className="text-xs text-admin-texto-suave">* Campos obrigatórios para publicar.</p>
+          {erroAoSalvar && <p className="mt-1 text-xs font-semibold text-admin-erro">{erroAoSalvar}</p>}
+        </div>
 
         <div className="flex gap-3 max-[720px]:grid max-[720px]:grid-cols-2">
-          <Botao variante="neutra" onClick={() => navigate("/admin/painel")}>
+          <Botao variante="neutra" disabled={salvando} onClick={() => navigate("/admin/painel")}>
             Cancelar
           </Botao>
-          <Botao type="submit">Salvar imóvel</Botao>
+          <Botao type="submit" disabled={salvando}>
+            {salvando ? "Salvando..." : "Salvar imóvel"}
+          </Botao>
         </div>
       </div>
 
