@@ -1,7 +1,7 @@
 const credenciais = [
-  { valor: "CRECI 06849-F", descricao: "Kátia" },
-  { valor: "CRECI 89187-F", descricao: "Renata" },
-  { valor: "15 anos", descricao: "de mercado" },
+  { valor: "CRECI-CE 8988", descricao: "Kátia" },
+  { valor: "CRECI-CE 11.307", descricao: "Renata" },
+  { valor: "+15 anos", descricao: "de mercado" },
   { valor: "Atendimento completo", descricao: "do imóvel à documentação" },
 ];
 

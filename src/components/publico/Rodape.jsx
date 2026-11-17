@@ -40,7 +40,7 @@ export default function Rodape() {
             Falar no WhatsApp
           </a>
           <p className="mt-4 mb-0 text-xs leading-relaxed text-white/50">
-            CRECI 06849-F (Kátia) · CRECI 89187-F (Renata)
+            CRECI 8988 (Kátia) · CRECI 11.307 (Renata)
           </p>
         </div>
       </div>
