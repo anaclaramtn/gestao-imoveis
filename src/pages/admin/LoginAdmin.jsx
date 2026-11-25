@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import Alerta from "../../components/comuns/Alerta";
 import Botao from "../../components/comuns/Botao";
@@ -7,7 +7,16 @@ import CampoSenha from "../../components/comuns/CampoSenha";
 import CampoTexto from "../../components/comuns/CampoTexto";
 import Logomarca from "../../components/comuns/Logomarca";
 import { useAuth } from "../../contexts/AuthContext";
-import { entrar as entrarNoFirebase, mensagemDeErroDeLogin } from "../../services/authService";
+import {
+  entrar as entrarNoFirebase,
+  mensagemDeErroDeLogin,
+  mensagemDeErroDeRecuperacao,
+  recuperarSenha,
+} from "../../services/authService";
+
+// Botões com cara de link ("Esqueci minha senha" e "Voltar ao login")
+const ESTILO_LINK =
+  "cursor-pointer text-xs font-semibold text-admin-destaque underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-60";
 
 export default function LoginAdmin() {
   const navigate = useNavigate();
@@ -36,6 +45,38 @@ export default function LoginAdmin() {
     }
   }
 
+  // A mesma tela alterna entre entrar e recuperar a senha; o e-mail digitado é mantido
+  const [recuperando, setRecuperando] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [emailEnviado, setEmailEnviado] = useState(false);
+
+  function trocarModo(paraRecuperacao) {
+    setRecuperando(paraRecuperacao);
+    setEmailEnviado(false);
+    setErro("");
+  }
+
+  async function enviarRecuperacao(evento) {
+    evento.preventDefault();
+
+    if (!email.trim()) {
+      setErro("Preencha o e-mail.");
+      return;
+    }
+
+    setErro("");
+    setEmailEnviado(false);
+    setEnviando(true);
+    try {
+      await recuperarSenha(email);
+      setEmailEnviado(true);
+    } catch (erroDeEnvio) {
+      setErro(mensagemDeErroDeRecuperacao(erroDeEnvio));
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   // Quem já tem sessão salva vai direto ao painel
   if (!carregando && usuario) return <Navigate to="/admin/painel" replace />;
 
@@ -48,7 +89,20 @@ export default function LoginAdmin() {
           <p className="text-xs uppercase tracking-[0.02em] text-admin-destaque">Acesso restrito ao corretor</p>
         </header>
 
-        <form className="flex flex-col gap-4 max-[480px]:gap-5" onSubmit={entrar} noValidate>
+        <form
+          className="flex flex-col gap-4 max-[480px]:gap-5"
+          onSubmit={recuperando ? enviarRecuperacao : entrar}
+          noValidate
+        >
+          {recuperando && (
+            <div className="text-center">
+              <h1 className="font-titulo text-2xl font-medium">Recuperar senha</h1>
+              <p className="mt-1.5 text-sm text-admin-texto-suave">
+                Informe o e-mail de acesso para receber o link de redefinição.
+              </p>
+            </div>
+          )}
+
           <CampoTexto
             rotulo="E-mail"
             obrigatorio
@@ -59,21 +113,64 @@ export default function LoginAdmin() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <CampoSenha
-            rotulo="Senha"
-            obrigatorio
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+          {!recuperando && (
+            <div className="flex flex-col gap-2">
+              <CampoSenha
+                rotulo="Senha"
+                obrigatorio
+                autoComplete="current-password"
+                placeholder="••••••••"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+              <button
+                type="button"
+                className={`${ESTILO_LINK} self-end`}
+                disabled={entrando}
+                onClick={() => trocarModo(true)}
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+          )}
 
           {erro && <Alerta>{erro}</Alerta>}
 
-          <Botao type="submit" larguraTotal disabled={entrando} className="max-[480px]:mt-3 max-[480px]:h-11">
-            {entrando ? "Entrando..." : "Entrar no Painel"}
+          {emailEnviado && (
+            <p className="rounded-admin border border-admin-destaque/45 px-3 py-2 text-sm" role="status">
+              Se houver uma conta com esse e-mail, você receberá um link para criar uma nova senha. Confira também a caixa
+              de spam.
+            </p>
+          )}
+
+          <Botao
+            type="submit"
+            larguraTotal
+            disabled={entrando || enviando}
+            className="max-[480px]:mt-3 max-[480px]:h-11"
+          >
+            {recuperando
+              ? enviando ? "Enviando..." : "Enviar link"
+              : entrando ? "Entrando..." : "Entrar no Painel"}
           </Botao>
+
+          {recuperando && (
+            <button
+              type="button"
+              className={`${ESTILO_LINK} self-center`}
+              disabled={enviando}
+              onClick={() => trocarModo(false)}
+            >
+              ← Voltar ao login
+            </button>
+          )}
         </form>
+
+        <div className="mt-6 border-t border-admin-borda pt-5 text-center">
+          <Link to="/" className="text-xs text-admin-texto-suave underline-offset-4 hover:text-admin-texto hover:underline">
+            Voltar ao site como visitante
+          </Link>
+        </div>
       </section>
     </main>
   );

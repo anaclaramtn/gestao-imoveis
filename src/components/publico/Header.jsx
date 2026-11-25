@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/LogoImobiliaria.png";
-import BotaoTema from "./BotaoTema";
+import MenuPerfil from "./MenuPerfil";
 
 // Link do menu: o da página atual fica branco, em destaque e com um traço rosa embaixo
 function classeDoLink({ isActive }) {
@@ -81,7 +81,8 @@ export default function Header() {
             )}
           </button>
 
-          <BotaoTema />
+          {/* Abrir o perfil fecha o menu do celular, para um não cobrir o outro */}
+          <MenuPerfil onAbrir={fecharMenu} />
         </div>
       </div>
     </header>
